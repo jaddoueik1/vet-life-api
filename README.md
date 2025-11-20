@@ -37,6 +37,20 @@ php artisan migrate
 php artisan queue:work
 ```
 
+## Seeders
+Populate the database with realistic demo data for users, clients, appointments, invoices, and inventory:
+```bash
+php artisan db:seed
+# or with Docker
+docker compose exec app php artisan db:seed
+```
+
+Default login examples seeded for testing:
+- Administrator/Vet: `ana.silva@example.com` / `password`
+- Veterinarian: `rafael.costa@example.com` / `password`
+- Receptionist: `camila.ribeiro@example.com` / `password`
+- Inventory Manager: `lucas.mendes@example.com` / `password`
+
 ## Feature Flags
 Feature availability is configured in `deployment-config.yml` under `features`. Routes are protected by the `feature` middleware
  defined in `app/Http/Middleware/EnsureFeatureEnabled.php`.
