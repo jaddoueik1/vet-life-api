@@ -31,6 +31,33 @@ paths:
       summary: Current user
       responses:
         '200': {description: User info}
+  /config:
+    get:
+      summary: Deployment configuration
+      responses:
+        '200':
+          description: Deployment config with enabled features
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deployment:
+                    type: object
+                    description: Branding, locale, and currency values for the clinic deployment.
+                  features:
+                    type: object
+                    additionalProperties:
+                      type: boolean
+                    description: Feature flag values keyed by feature name.
+                  allowed_features:
+                    type: array
+                    items:
+                      type: string
+                    description: Feature names currently enabled.
+                  plugins:
+                    type: object
+                    description: Plugin configuration keyed by plugin name.
   /users:
     get:
       security: [{sanctum: []}]
