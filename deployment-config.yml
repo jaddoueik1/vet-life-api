@@ -1,0 +1,49 @@
+deployment:
+  clinic_name: "Happy Paws Veterinary Hospital"
+  timezone: "Asia/Beirut"
+  currency: "USD"
+  locale: "en"
+  brand:
+    logo_url: "https://cdn.example.com/logo.png"
+    primary_color: "#1A73E8"
+    secondary_color: "#F9A826"
+features:
+  appointments: true
+  patients: true
+  visits: true
+  invoicing: false
+  inventory: true
+  chat_bot: false
+  whatsapp_reminders: true
+plugins:
+  whatsapp_reminder:
+    enabled: true
+    requires_features: ["appointments"]
+    provider: "meta_cloud_api"
+    reminder_rules:
+      - event: "APPOINTMENT_BEFORE"
+        offset_hours: 24
+        template_code: "appt_reminder_24h"
+      - event: "APPOINTMENT_BEFORE"
+        offset_hours: 2
+        template_code: "appt_reminder_2h"
+      - event: "AFTER_VISIT"
+        offset_hours: 6
+        template_code: "post_visit_feedback"
+  employee_access:
+    enabled: true
+    requires_features: []
+    rules:
+      receptionist:
+        can_edit_appointments: true
+        can_view_invoices: true
+        can_edit_prices: false
+      vet:
+        can_view_schedule: true
+        can_issue_prescriptions: true
+      inventory_manager:
+        can_adjust_stock: true
+        can_view_financial_reports: false
+  low_stock_alert:
+    enabled: true
+    requires_features: ["inventory"]
