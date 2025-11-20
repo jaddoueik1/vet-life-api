@@ -23,5 +23,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('feature:patients')->apiResource('patients', PatientController::class);
     Route::middleware('feature:visits')->apiResource('visits', VisitController::class);
     Route::middleware('feature:invoicing')->apiResource('invoices', InvoiceController::class);
-    Route::middleware('feature:inventory')->apiResource('inventory', InventoryController::class);
+    Route::middleware('feature:inventory')->group(function () {
+        Route::get('inventory/items/low-stock', [InventoryController::class, 'lowStock']);
+        Route::apiResource('inventory', InventoryController::class);
+    });
 });
