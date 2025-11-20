@@ -22,7 +22,13 @@ RUN apt-get update \
 COPY --from=vendor /usr/bin/composer /usr/bin/composer
 COPY --from=vendor /app /var/www/html
 
-RUN chown -R www-data:www-data storage bootstrap/cache
+RUN mkdir -p \
+        storage/logs \
+        storage/framework/cache \
+        storage/framework/sessions \
+        storage/framework/views \
+        bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 8000
 
