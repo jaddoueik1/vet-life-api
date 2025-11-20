@@ -9,8 +9,10 @@ use App\Domain\Patients\Http\Controllers\PatientController;
 use App\Domain\Visits\Http\Controllers\VisitController;
 use App\Domain\Invoicing\Http\Controllers\InvoiceController;
 use App\Domain\Inventory\Http\Controllers\InventoryController;
+use App\Http\Controllers\ConfigController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::get('/config', [ConfigController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
