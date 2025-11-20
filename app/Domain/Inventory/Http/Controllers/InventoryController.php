@@ -33,6 +33,11 @@ class InventoryController extends Controller
         return $inventoryItem;
     }
 
+    public function lowStock()
+    {
+        return $this->service->lowStockItems();
+    }
+
     public function update(Request $request, InventoryItem $inventoryItem)
     {
         $inventoryItem->update($request->all());
