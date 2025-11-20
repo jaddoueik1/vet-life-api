@@ -2,10 +2,11 @@
 
 namespace App\Domain\Visits\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Domain\Patients\Models\Patient;
 use App\Domain\Users\Models\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Visit extends Model
 {
@@ -19,5 +20,10 @@ class Visit extends Model
     public function vet(): BelongsTo
     {
         return $this->belongsTo(User::class, 'vet_id');
+    }
+
+    public function attachments(): HasMany
+    {
+        return $this->hasMany(Attachment::class);
     }
 }
