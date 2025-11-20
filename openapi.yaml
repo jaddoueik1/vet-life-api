@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: Vet Life API
+  version: 1.0.0
+paths:
+  /auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200': {description: Token response}
+  /auth/logout:
+    post:
+      security: [{sanctum: []}]
+      summary: Logout
+      responses:
+        '204': {description: Logged out}
+  /auth/me:
+    get:
+      security: [{sanctum: []}]
+      summary: Current user
+      responses:
+        '200': {description: User info}
+  /users:
+    get:
+      security: [{sanctum: []}]
+      summary: List users
+      responses:
+        '200': {description: List of users}
+    post:
+      security: [{sanctum: []}]
+      summary: Create user
+      responses:
+        '201': {description: Created}
+  /users/{id}:
+    patch:
+      security: [{sanctum: []}]
+      summary: Update user
+      responses:
+        '200': {description: Updated}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete user
+      responses:
+        '204': {description: Deleted}
+  /appointments:
+    get:
+      security: [{sanctum: []}]
+      summary: List appointments
+      responses: {'200': {description: ok}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create appointment
+      responses: {'201': {description: created}}
+  /appointments/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show appointment
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update appointment
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete appointment
+      responses: {'204': {description: no content}}
+components:
+  securitySchemes:
+    sanctum:
+      type: apiKey
+      in: header
+      name: Authorization
+  schemas:
+    User:
+      type: object
+      properties:
+        id: {type: integer}
+        name: {type: string}
+        email: {type: string}
+    Appointment:
+      type: object
+      properties:
+        id: {type: integer}
+        patient_id: {type: integer}
+        scheduled_at: {type: string, format: date-time}
+        status: {type: string}
