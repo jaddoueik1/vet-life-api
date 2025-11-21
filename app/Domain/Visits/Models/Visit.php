@@ -2,10 +2,12 @@
 
 namespace App\Domain\Visits\Models;
 
+use App\Domain\Medications\Models\Medication;
 use App\Domain\Patients\Models\Patient;
 use App\Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Visit extends Model
@@ -25,5 +27,12 @@ class Visit extends Model
     public function attachments(): HasMany
     {
         return $this->hasMany(Attachment::class);
+    }
+
+    public function medications(): BelongsToMany
+    {
+        return $this->belongsToMany(Medication::class)
+            ->withPivot('quantity')
+            ->withTimestamps();
     }
 }

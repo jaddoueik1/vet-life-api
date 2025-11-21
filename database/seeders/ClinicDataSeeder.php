@@ -135,6 +135,7 @@ class ClinicDataSeeder extends Seeder
                     ['number' => 'INV-' . $invoiceCounter++],
                     [
                         'owner_id' => $owner->id,
+                        'patient_id' => $patient->id,
                         'status' => 'sent',
                         'total' => 0,
                     ]

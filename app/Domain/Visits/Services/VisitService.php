@@ -10,7 +10,21 @@ class VisitService
 {
     public function create(array $data): Visit
     {
+        $medications = $data['medications'] ?? [];
+        unset($data['medications']);
+
         $visit = Visit::create($data);
+
+        if (! empty($medications)) {
+            $pivotData = collect($medications)
+                ->mapWithKeys(fn ($medication) => [
+                    $medication['medication_id'] => ['quantity' => $medication['quantity'] ?? 1],
+                ])
+                ->toArray();
+
+            $visit->medications()->sync($pivotData);
+        }
+
         Event::dispatch(new VisitCreated($visit->toArray()));
         return $visit;
     }
