@@ -12,8 +12,10 @@ class VisitService
     {
         $medications = $data['medication_ids'] ?? [];
         $services = $data['service_ids'] ?? [];
+        $equipmentUsed = $data['equipment_used_ids'] ?? [];
         unset($data['medication_ids']);
         unset($data['service_ids']);
+        unset($data['equipment_used_ids']);
 
         $visit = Visit::create($data);
 
@@ -33,6 +35,15 @@ class VisitService
                 ])
                 ->toArray();
             $visit->services()->sync($servicePivotData);
+        }
+
+        if (! empty($equipmentUsed)) {
+            $equipmentPivotData = collect($equipmentUsed)
+                ->mapWithKeys(fn($equipment) => [
+                    $equipment => ['quantity' => 1],
+                ])
+                ->toArray();
+            $visit->equipmentUsed()->sync($equipmentPivotData);
         }
 
         Event::dispatch(new VisitCreated($visit->toArray()));

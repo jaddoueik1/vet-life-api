@@ -15,7 +15,7 @@ class VisitController extends Controller
 
     public function index()
     {
-        return Visit::with(['patient', 'vet', 'services', 'medications'])->paginate();
+        return Visit::with(['patient', 'vet', 'services', 'medications', 'equipmentUsed'])->paginate();
     }
 
     public function store(Request $request)
@@ -29,6 +29,7 @@ class VisitController extends Controller
             'visit_date' => 'required|date',
             'medication_ids' => 'nullable|array',
             'service_ids' => 'nullable|array',
+            'equipment_used_ids' => 'nullable|array',
         ]);
 
         return $this->service->create($data);
@@ -36,7 +37,7 @@ class VisitController extends Controller
 
     public function show(Visit $visit)
     {
-        return $visit->load(['patient', 'vet', 'services', 'medications']);
+        return $visit->load(['patient', 'vet', 'services', 'medications', 'equipmentUsed']);
     }
 
     public function update(Request $request, Visit $visit)
