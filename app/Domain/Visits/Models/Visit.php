@@ -3,6 +3,7 @@
 namespace App\Domain\Visits\Models;
 
 use App\Domain\Medications\Models\Medication;
+use App\Domain\Services\Models\Service;
 use App\Domain\Patients\Models\Patient;
 use App\Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +33,13 @@ class Visit extends Model
     public function medications(): BelongsToMany
     {
         return $this->belongsToMany(Medication::class)
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
+
+    public function services(): BelongsToMany
+    {
+        return $this->belongsToMany(Service::class)
             ->withPivot('quantity')
             ->withTimestamps();
     }

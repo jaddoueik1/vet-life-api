@@ -12,6 +12,7 @@ features:
   patients: true
   visits: true
   medications: true
+  services: true
   invoicing: false
   inventory: true
   chat_bot: false

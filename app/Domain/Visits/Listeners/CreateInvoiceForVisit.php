@@ -20,7 +20,7 @@ class CreateInvoiceForVisit
             return;
         }
 
-        $visit = Visit::with('patient.owner', 'medications')->find($visitId);
+        $visit = Visit::with('patient.owner', 'medications', 'services')->find($visitId);
 
         if ($visit === null || $visit->patient === null || $visit->patient->owner === null) {
             return;
@@ -34,12 +34,20 @@ class CreateInvoiceForVisit
             ];
         })->toArray();
 
+        $serviceLineItems = $visit->services->map(function ($service) {
+            return [
+                'description' => $service->name,
+                'quantity' => $service->pivot->quantity ?? 1,
+                'unit_price' => $service->price,
+            ];
+        })->toArray();
+
         $this->invoiceService->create([
             'owner_id' => $visit->patient->owner_id,
             'patient_id' => $visit->patient_id,
             'visit_id' => $visit->id,
             'status' => 'draft',
-            'line_items' => $medicationLineItems,
+            'line_items' => array_merge($medicationLineItems, $serviceLineItems),
         ]);
     }
 }

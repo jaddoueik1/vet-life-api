@@ -168,6 +168,28 @@ paths:
       security: [{sanctum: []}]
       summary: Delete medication
       responses: {'204': {description: no content}}
+  /services:
+    get:
+      security: [{sanctum: []}]
+      summary: List services
+      responses: {'200': {description: Paginated services}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create service
+      responses: {'201': {description: Created}}
+  /services/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show service
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update service
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete service
+      responses: {'204': {description: no content}}
 components:
   securitySchemes:
     sanctum:
