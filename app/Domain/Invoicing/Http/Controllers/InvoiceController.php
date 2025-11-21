@@ -21,11 +21,15 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'number' => 'required',
-            'owner_id' => 'required|integer',
-            'status' => 'required',
-            'total' => 'required|numeric'
+            'patient_id' => 'required|integer|exists:patients,id',
+            'owner_id' => 'required|integer|exists:owners,id',
+            'status' => 'required|string',
+            'line_items' => 'required|array|min:1',
+            'line_items.*.description' => 'required|string',
+            'line_items.*.quantity' => 'required|integer|min:1',
+            'line_items.*.unit_price' => 'required|numeric|min:0',
         ]);
+
         return $this->service->create($data);
     }
 
