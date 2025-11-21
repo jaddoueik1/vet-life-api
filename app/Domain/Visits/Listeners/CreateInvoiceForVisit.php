@@ -26,12 +26,20 @@ class CreateInvoiceForVisit
             return;
         }
 
+        $medicationLineItems = $visit->medications->map(function ($medication) {
+            return [
+                'description' => $medication->name,
+                'quantity' => $medication->pivot->quantity ?? 1,
+                'unit_price' => $medication->price,
+            ];
+        })->toArray();
+
         $this->invoiceService->create([
             'owner_id' => $visit->patient->owner_id,
             'patient_id' => $visit->patient_id,
             'visit_id' => $visit->id,
             'status' => 'draft',
-            'line_items' => [],
+            'line_items' => $medicationLineItems,
         ]);
     }
 }
