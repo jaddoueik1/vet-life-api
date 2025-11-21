@@ -4,6 +4,8 @@ namespace App\Domain\Visits\Services;
 
 use App\Domain\Visits\Models\Visit;
 use App\Domain\Visits\Events\VisitCreated;
+use App\Domain\Inventory\Events\MedicationUsed;
+use App\Domain\Inventory\Events\EquipmentUsed;
 use Illuminate\Support\Facades\Event;
 
 class VisitService
@@ -12,8 +14,10 @@ class VisitService
     {
         $medications = $data['medication_ids'] ?? [];
         $services = $data['service_ids'] ?? [];
+        $equipment = $data['equipment_ids'] ?? [];
         unset($data['medication_ids']);
         unset($data['service_ids']);
+        unset($data['equipment_ids']);
 
         $visit = Visit::create($data);
 
@@ -24,6 +28,33 @@ class VisitService
                 ])
                 ->toArray();
             $visit->medications()->sync($pivotData);
+
+            foreach ($pivotData as $medicationId => $pivot) {
+                $quantity = $pivot['quantity'] ?? 1;
+                Event::dispatch(new MedicationUsed([
+                    'visit_id' => $visit->id,
+                    'medication_id' => $medicationId,
+                    'quantity' => $quantity,
+                ]));
+            }
+        }
+
+        if (! empty($equipment)) {
+            $equipmentPivotData = collect($equipment)
+                ->mapWithKeys(fn($inventoryItemId) => [
+                    $inventoryItemId => ['quantity' => 1],
+                ])
+                ->toArray();
+            $visit->equipment()->sync($equipmentPivotData);
+
+            foreach ($equipmentPivotData as $inventoryItemId => $pivot) {
+                $quantity = $pivot['quantity'] ?? 1;
+                Event::dispatch(new EquipmentUsed([
+                    'visit_id' => $visit->id,
+                    'inventory_item_id' => $inventoryItemId,
+                    'quantity' => $quantity,
+                ]));
+            }
         }
 
         if (! empty($services)) {
