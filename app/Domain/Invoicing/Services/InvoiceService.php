@@ -15,7 +15,7 @@ class InvoiceService
     {
         $lineItems = $data['line_items'] ?? [];
 
-        if (! empty($data['visit_id'])) {
+        if (! empty($data['visit_id']) && empty($lineItems)) {
             $visit = Visit::with('medications')->find($data['visit_id']);
 
             if ($visit) {
@@ -23,7 +23,7 @@ class InvoiceService
                     return [
                         'description' => $medication->name,
                         'quantity' => $medication->pivot->quantity ?? 1,
-                        'unit_price' => $medication->unit_price,
+                        'unit_price' => $medication->price,
                     ];
                 })->toArray();
 
