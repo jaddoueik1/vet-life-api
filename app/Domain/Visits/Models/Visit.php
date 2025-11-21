@@ -4,6 +4,7 @@ namespace App\Domain\Visits\Models;
 
 use App\Domain\Medications\Models\Medication;
 use App\Domain\Services\Models\Service;
+use App\Domain\Inventory\Models\InventoryItem;
 use App\Domain\Patients\Models\Patient;
 use App\Domain\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -40,6 +41,13 @@ class Visit extends Model
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class)
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
+
+    public function equipmentUsed(): BelongsToMany
+    {
+        return $this->belongsToMany(InventoryItem::class, 'inventory_item_visit')
             ->withPivot('quantity')
             ->withTimestamps();
     }
