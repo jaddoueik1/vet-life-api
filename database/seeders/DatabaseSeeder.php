@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             ClinicDataSeeder::class,
             InventorySeeder::class,
             MedicationSeeder::class,
+            ServiceSeeder::class,
         ]);
     }
 }

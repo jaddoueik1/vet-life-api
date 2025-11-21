@@ -16,7 +16,7 @@ class InvoiceService
         $lineItems = $data['line_items'] ?? [];
 
         if (! empty($data['visit_id']) && empty($lineItems)) {
-            $visit = Visit::with('medications')->find($data['visit_id']);
+            $visit = Visit::with('medications', 'services')->find($data['visit_id']);
 
             if ($visit) {
                 $medicationLineItems = $visit->medications->map(function ($medication) {
@@ -27,7 +27,15 @@ class InvoiceService
                     ];
                 })->toArray();
 
-                $lineItems = array_merge($lineItems, $medicationLineItems);
+                $serviceLineItems = $visit->services->map(function ($service) {
+                    return [
+                        'description' => $service->name,
+                        'quantity' => $service->pivot->quantity ?? 1,
+                        'unit_price' => $service->price,
+                    ];
+                })->toArray();
+
+                $lineItems = array_merge($lineItems, $medicationLineItems, $serviceLineItems);
             }
         }
 

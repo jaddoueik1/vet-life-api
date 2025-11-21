@@ -10,6 +10,7 @@ use App\Domain\Visits\Http\Controllers\VisitController;
 use App\Domain\Invoicing\Http\Controllers\InvoiceController;
 use App\Domain\Inventory\Http\Controllers\InventoryController;
 use App\Domain\Medications\Http\Controllers\MedicationController;
+use App\Domain\Services\Http\Controllers\ServiceController;
 use App\Http\Controllers\ConfigController;
 use App\Domain\Staff\Http\Controllers\StaffController;
 use App\Domain\Staff\Http\Controllers\VeterinarianController;
@@ -39,4 +40,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('inventory', InventoryController::class);
     });
     Route::middleware('feature:medications')->apiResource('medications', MedicationController::class);
+    Route::middleware('feature:services')->apiResource('services', ServiceController::class);
 });
