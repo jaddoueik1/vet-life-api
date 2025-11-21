@@ -4,6 +4,7 @@ namespace App\Domain\Visits\Services;
 
 use App\Domain\Visits\Models\Visit;
 use App\Domain\Visits\Events\VisitCreated;
+use App\Domain\Inventory\Events\MedicationUsed;
 use Illuminate\Support\Facades\Event;
 
 class VisitService
@@ -24,6 +25,15 @@ class VisitService
                 ])
                 ->toArray();
             $visit->medications()->sync($pivotData);
+
+            foreach ($pivotData as $medicationId => $pivot) {
+                $quantity = $pivot['quantity'] ?? 1;
+                Event::dispatch(new MedicationUsed([
+                    'visit_id' => $visit->id,
+                    'medication_id' => $medicationId,
+                    'quantity' => $quantity,
+                ]));
+            }
         }
 
         if (! empty($services)) {
