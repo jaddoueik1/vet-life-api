@@ -18,7 +18,9 @@ class MedicationController extends Controller
         $data = $request->validate([
             'name' => 'required|string',
             'sku' => 'required|string|unique:medications,sku',
-            'description' => 'nullable|string',
+            'strength' => 'nullable|string',
+            'category' => 'nullable|string',
+            'dosage' => 'nullable|string',
             'price' => 'nullable|numeric|min:0',
             'current_stock' => 'nullable|integer|min:0',
             'reorder_level' => 'nullable|integer|min:0',
@@ -37,7 +39,9 @@ class MedicationController extends Controller
         $data = $request->validate([
             'name' => 'sometimes|required|string',
             'sku' => 'sometimes|required|string|unique:medications,sku,' . $medication->id,
-            'description' => 'sometimes|nullable|string',
+            'strength' => 'sometimes|nullable|string',
+            'category' => 'sometimes|nullable|string',
+            'dosage' => 'sometimes|nullable|string',
             'price' => 'sometimes|numeric|min:0',
             'current_stock' => 'sometimes|integer|min:0',
             'reorder_level' => 'sometimes|integer|min:0',

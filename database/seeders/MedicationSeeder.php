@@ -10,9 +10,30 @@ class MedicationSeeder extends Seeder
     public function run(): void
     {
         $medications = [
-            ['name' => 'Amoxicillin', 'description' => 'Broad-spectrum antibiotic', 'unit_price' => 15.50],
-            ['name' => 'Carprofen', 'description' => 'Anti-inflammatory for pain relief', 'unit_price' => 22.75],
-            ['name' => 'Dewormer', 'description' => 'Intestinal parasite treatment', 'unit_price' => 12.00],
+            [
+                'name' => 'Amoxicillin',
+                'sku' => 'AMX-001',
+                'strength' => '250mg',
+                'category' => 'Antibiotic',
+                'dosage' => 'Twice daily',
+                'price' => 15.50,
+            ],
+            [
+                'name' => 'Carprofen',
+                'sku' => 'CRP-001',
+                'strength' => '25mg',
+                'category' => 'Pain Relief',
+                'dosage' => 'Once daily',
+                'price' => 22.75,
+            ],
+            [
+                'name' => 'Dewormer',
+                'sku' => 'DWM-001',
+                'strength' => '50mg',
+                'category' => 'Antiparasitic',
+                'dosage' => 'Single dose',
+                'price' => 12.00,
+            ],
         ];
 
         foreach ($medications as $medication) {

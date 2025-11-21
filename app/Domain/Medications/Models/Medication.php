@@ -8,7 +8,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Medication extends Model
 {
-    protected $fillable = ['name', 'sku', 'description', 'price', 'current_stock', 'reorder_level'];
+    protected $fillable = [
+        'name',
+        'sku',
+        'strength',
+        'category',
+        'dosage',
+        'price',
+        'current_stock',
+        'reorder_level',
+    ];
 
     public function visits(): BelongsToMany
     {
