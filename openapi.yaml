@@ -146,6 +146,28 @@ paths:
       security: [{sanctum: []}]
       summary: Delete appointment
       responses: {'204': {description: no content}}
+  /medications:
+    get:
+      security: [{sanctum: []}]
+      summary: List medications
+      responses: {'200': {description: Paginated medications}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create medication
+      responses: {'201': {description: Created}}
+  /medications/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show medication
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update medication
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete medication
+      responses: {'204': {description: no content}}
 components:
   securitySchemes:
     sanctum:
