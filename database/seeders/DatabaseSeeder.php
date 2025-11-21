@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             RolesAndUsersSeeder::class,
             ClinicDataSeeder::class,
             InventorySeeder::class,
+            MedicationSeeder::class,
         ]);
     }
 }

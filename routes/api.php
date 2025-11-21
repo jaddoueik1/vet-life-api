@@ -24,9 +24,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('staff', StaffController::class);
     Route::middleware('feature:appointments')->apiResource('appointments', AppointmentController::class);
     Route::middleware('feature:patients')->apiResource('owners', OwnerController::class);
-    Route::middleware('feature:patients')->apiResource('patients', PatientController::class);
+    Route::middleware('feature:patients')->group(function () {
+        Route::get('patients/{patient}/details', [PatientController::class, 'details']);
+        Route::apiResource('patients', PatientController::class);
+    });
     Route::middleware('feature:visits')->apiResource('visits', VisitController::class);
-    Route::middleware('feature:invoicing')->apiResource('invoices', InvoiceController::class);
+    Route::middleware('feature:invoicing')->group(function () {
+        Route::post('invoices/{invoice}/payment', [InvoiceController::class, 'recordPayment']);
+        Route::apiResource('invoices', InvoiceController::class);
+    });
     Route::middleware('feature:inventory')->group(function () {
         Route::get('inventory/items/low-stock', [InventoryController::class, 'lowStock']);
         Route::apiResource('inventory', InventoryController::class);

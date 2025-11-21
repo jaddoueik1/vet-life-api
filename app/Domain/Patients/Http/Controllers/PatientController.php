@@ -31,6 +31,18 @@ class PatientController extends Controller
         return $patient->load('owner');
     }
 
+    public function details(Patient $patient)
+    {
+        return $patient->load([
+            'owner',
+            'visits.vet',
+            'visits.attachments',
+            'visits.medications',
+            'invoices.lineItems',
+            'invoices.payments',
+        ]);
+    }
+
     public function update(Request $request, Patient $patient)
     {
         $patient->update($request->all());
