@@ -10,6 +10,8 @@ use App\Domain\Visits\Http\Controllers\VisitController;
 use App\Domain\Invoicing\Http\Controllers\InvoiceController;
 use App\Domain\Inventory\Http\Controllers\InventoryController;
 use App\Http\Controllers\ConfigController;
+use App\Domain\Staff\Http\Controllers\StaffController;
+use App\Domain\Staff\Http\Controllers\VeterinarianController;
 
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::get('/config', [ConfigController::class, 'show']);
@@ -18,6 +20,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/auth/me', [AuthController::class, 'me']);
 
     Route::apiResource('users', UserController::class);
+    Route::apiResource('veterinarians', VeterinarianController::class);
+    Route::apiResource('staff', StaffController::class);
     Route::middleware('feature:appointments')->apiResource('appointments', AppointmentController::class);
     Route::middleware('feature:patients')->apiResource('owners', OwnerController::class);
     Route::middleware('feature:patients')->apiResource('patients', PatientController::class);
