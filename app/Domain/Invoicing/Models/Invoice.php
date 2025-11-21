@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Invoice extends Model
 {
-    protected $fillable = ['number', 'owner_id', 'status', 'total'];
+    protected $fillable = ['number', 'owner_id', 'patient_id', 'status', 'total'];
 
     public function lineItems(): HasMany
     {
