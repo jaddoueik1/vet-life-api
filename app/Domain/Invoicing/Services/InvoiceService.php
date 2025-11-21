@@ -23,7 +23,7 @@ class InvoiceService
                     return [
                         'description' => $medication->name,
                         'quantity' => $medication->pivot->quantity ?? 1,
-                        'unit_price' => $medication->price,
+                        'price' => $medication->price,
                     ];
                 })->toArray();
 
@@ -31,7 +31,7 @@ class InvoiceService
                     return [
                         'description' => $service->name,
                         'quantity' => $service->pivot->quantity ?? 1,
-                        'unit_price' => $service->price,
+                        'price' => $service->price,
                     ];
                 })->toArray();
 
@@ -48,7 +48,7 @@ class InvoiceService
                 'number' => 'INV-' . Str::upper(Str::random(8)),
                 'total' => round(
                     collect($lineItems)->reduce(
-                        fn (float $carry, array $item) => $carry + ($item['unit_price'] * $item['quantity']),
+                        fn (float $carry, array $item) => $carry + ($item['price'] * $item['quantity']),
                         0.0
                     ),
                     2
@@ -62,7 +62,7 @@ class InvoiceService
                     return [
                         'description' => $item['description'],
                         'quantity' => $item['quantity'],
-                        'price' => $item['unit_price'],
+                        'price' => $item['price'],
                     ];
                 })->toArray()
             );

@@ -10,30 +10,28 @@ class VisitService
 {
     public function create(array $data): Visit
     {
-        $medications = $data['medications'] ?? [];
-        $services = $data['services'] ?? [];
-        unset($data['medications']);
-        unset($data['services']);
+        $medications = $data['medication_ids'] ?? [];
+        $services = $data['service_ids'] ?? [];
+        unset($data['medication_ids']);
+        unset($data['service_ids']);
 
         $visit = Visit::create($data);
 
         if (! empty($medications)) {
             $pivotData = collect($medications)
-                ->mapWithKeys(fn ($medication) => [
-                    $medication['medication_id'] => ['quantity' => $medication['quantity'] ?? 1],
+                ->mapWithKeys(fn($medication) => [
+                    $medication => ['quantity' => 1],
                 ])
                 ->toArray();
-
             $visit->medications()->sync($pivotData);
         }
 
         if (! empty($services)) {
             $servicePivotData = collect($services)
-                ->mapWithKeys(fn ($service) => [
-                    $service['service_id'] => ['quantity' => $service['quantity'] ?? 1],
+                ->mapWithKeys(fn($service) => [
+                    $service => ['quantity' => 1],
                 ])
                 ->toArray();
-
             $visit->services()->sync($servicePivotData);
         }
 

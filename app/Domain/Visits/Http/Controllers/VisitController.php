@@ -27,12 +27,8 @@ class VisitController extends Controller
             'diagnosis' => 'nullable',
             'treatment' => 'nullable',
             'visit_date' => 'required|date',
-            'medications' => 'nullable|array',
-            'medications.*.medication_id' => 'required_with:medications|integer|exists:medications,id',
-            'medications.*.quantity' => 'nullable|integer|min:1',
-            'services' => 'nullable|array',
-            'services.*.service_id' => 'required_with:services|integer|exists:services,id',
-            'services.*.quantity' => 'nullable|integer|min:1',
+            'medication_ids' => 'nullable|array',
+            'service_ids' => 'nullable|array',
         ]);
 
         return $this->service->create($data);

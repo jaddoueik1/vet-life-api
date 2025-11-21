@@ -23,7 +23,7 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('api')->plainTextToken;
-        return ['token' => $token, 'user' => $user];
+        return ['token' => $token, 'user' => $user->load('roles')];
     }
 
     public function logout(Request $request)
@@ -34,6 +34,6 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return $request->user();
+        return $request->user()->load('roles');
     }
 }

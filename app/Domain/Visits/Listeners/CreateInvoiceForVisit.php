@@ -22,6 +22,8 @@ class CreateInvoiceForVisit
 
         $visit = Visit::with('patient.owner', 'medications', 'services')->find($visitId);
 
+        \Log::info('Handling VisitCreated event for visit ID: ' . $visitId);
+        \Log::info('Loaded visit: ' . ($visit ? 'found' : 'not found'));
         if ($visit === null || $visit->patient === null || $visit->patient->owner === null) {
             return;
         }
@@ -30,7 +32,7 @@ class CreateInvoiceForVisit
             return [
                 'description' => $medication->name,
                 'quantity' => $medication->pivot->quantity ?? 1,
-                'unit_price' => $medication->price,
+                'price' => $medication->price,
             ];
         })->toArray();
 
@@ -38,10 +40,13 @@ class CreateInvoiceForVisit
             return [
                 'description' => $service->name,
                 'quantity' => $service->pivot->quantity ?? 1,
-                'unit_price' => $service->price,
+                'price' => $service->price,
             ];
         })->toArray();
 
+        \Log::info('Creating invoice for visit ID: ' . $visit->id);
+        \Log::info('Medication Line Items: ' . json_encode($medicationLineItems));
+        \Log::info('Service Line Items: ' . json_encode($serviceLineItems));
         $this->invoiceService->create([
             'owner_id' => $visit->patient->owner_id,
             'patient_id' => $visit->patient_id,

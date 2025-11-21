@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->integer('current_stock')->default(0)->after('description');
             $table->decimal('price', 10, 2)->default(0)->after('current_stock');
             $table->integer('reorder_level')->default(0)->after('price');
+            $table->string('category')->nullable()->after('sku');
             $table->dropColumn('unit_price');
         });
     }
@@ -19,7 +20,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('medications', function (Blueprint $table) {
-            $table->dropColumn(['sku', 'current_stock', 'price', 'reorder_level']);
+            $table->dropColumn(['sku', 'current_stock', 'price', 'reorder_level', 'category']);
             $table->decimal('unit_price', 10, 2)->default(0)->after('description');
         });
     }

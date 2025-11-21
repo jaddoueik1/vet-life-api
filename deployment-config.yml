@@ -13,7 +13,7 @@ features:
   visits: true
   medications: true
   services: true
-  invoicing: false
+  invoicing: true
   inventory: true
   chat_bot: false
   whatsapp_reminders: true
