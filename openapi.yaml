@@ -80,6 +80,50 @@ paths:
       summary: Delete user
       responses:
         '204': {description: Deleted}
+  /veterinarians:
+    get:
+      security: [{sanctum: []}]
+      summary: List veterinarians
+      responses: {'200': {description: Paginated veterinarians}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create veterinarian
+      responses: {'201': {description: Created}}
+  /veterinarians/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show veterinarian
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update veterinarian
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete veterinarian
+      responses: {'204': {description: no content}}
+  /staff:
+    get:
+      security: [{sanctum: []}]
+      summary: List staff
+      responses: {'200': {description: Paginated staff members}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create staff member
+      responses: {'201': {description: Created}}
+  /staff/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show staff member
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update staff member
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete staff member
+      responses: {'204': {description: no content}}
   /appointments:
     get:
       security: [{sanctum: []}]
@@ -115,6 +159,16 @@ components:
         id: {type: integer}
         name: {type: string}
         email: {type: string}
+    StaffMember:
+      type: object
+      properties:
+        id: {type: integer}
+        name: {type: string}
+        email: {type: string}
+        phone: {type: string}
+        role: {type: string, enum: [veterinarian, staff]}
+        specialization: {type: string}
+        position: {type: string}
     Appointment:
       type: object
       properties:
