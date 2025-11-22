@@ -22,6 +22,8 @@ plugins:
     enabled: true
     requires_features: ["appointments"]
     provider: "meta_cloud_api"
+    messages:
+      appointment_before: "Hi {owner_name}, this is {clinic_name}. Reminder for {patient_name}'s appointment on {scheduled_at}."
     reminder_rules:
       - event: "APPOINTMENT_BEFORE"
         offset_hours: 24
