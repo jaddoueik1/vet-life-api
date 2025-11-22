@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Domain\Visits\Models\Visit;
+use App\Domain\Vendors\Models\Vendor;
 
 class InventoryItem extends Model
 {
@@ -20,6 +21,13 @@ class InventoryItem extends Model
     {
         return $this->belongsToMany(Visit::class, 'inventory_item_visit')
             ->withPivot('quantity')
+            ->withTimestamps();
+    }
+
+    public function vendors(): BelongsToMany
+    {
+        return $this->belongsToMany(Vendor::class)
+            ->withPivot('is_primary')
             ->withTimestamps();
     }
 }

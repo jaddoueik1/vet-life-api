@@ -11,6 +11,7 @@ use App\Domain\Invoicing\Http\Controllers\InvoiceController;
 use App\Domain\Inventory\Http\Controllers\InventoryController;
 use App\Domain\Medications\Http\Controllers\MedicationController;
 use App\Domain\Services\Http\Controllers\ServiceController;
+use App\Domain\Vendors\Http\Controllers\VendorController;
 use App\Http\Controllers\ConfigController;
 use App\Domain\Staff\Http\Controllers\StaffController;
 use App\Domain\Staff\Http\Controllers\VeterinarianController;
@@ -38,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('feature:inventory')->group(function () {
         Route::get('inventory/items/low-stock', [InventoryController::class, 'lowStock']);
         Route::apiResource('inventory', InventoryController::class);
+        Route::apiResource('vendors', VendorController::class);
     });
     Route::middleware('feature:medications')->apiResource('medications', MedicationController::class);
     Route::middleware('feature:services')->apiResource('services', ServiceController::class);
