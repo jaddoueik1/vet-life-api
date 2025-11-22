@@ -17,6 +17,8 @@ class MedicationSeeder extends Seeder
                 'category' => 'Antibiotic',
                 'dosage' => 'Twice daily',
                 'price' => 15.50,
+                'current_stock' => 150,
+                'reorder_level' => 30,
             ],
             [
                 'name' => 'Carprofen',
@@ -25,6 +27,8 @@ class MedicationSeeder extends Seeder
                 'category' => 'Pain Relief',
                 'dosage' => 'Once daily',
                 'price' => 22.75,
+                'current_stock' => 80,
+                'reorder_level' => 20,
             ],
             [
                 'name' => 'Dewormer',
@@ -33,6 +37,8 @@ class MedicationSeeder extends Seeder
                 'category' => 'Antiparasitic',
                 'dosage' => 'Single dose',
                 'price' => 12.00,
+                'current_stock' => 200,
+                'reorder_level' => 40,
             ],
         ];
 
