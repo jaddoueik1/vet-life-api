@@ -190,6 +190,28 @@ paths:
       security: [{sanctum: []}]
       summary: Delete service
       responses: {'204': {description: no content}}
+  /vendors:
+    get:
+      security: [{sanctum: []}]
+      summary: List vendors
+      responses: {'200': {description: Paginated vendors}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create vendor with contact information
+      responses: {'201': {description: Created}}
+  /vendors/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show vendor
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update vendor
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete vendor
+      responses: {'204': {description: no content}}
 components:
   securitySchemes:
     sanctum:
@@ -220,3 +242,14 @@ components:
         patient_id: {type: integer}
         scheduled_at: {type: string, format: date-time}
         status: {type: string}
+    Vendor:
+      type: object
+      properties:
+        id: {type: integer}
+        name: {type: string}
+        main_contact_name: {type: string}
+        main_contact_email: {type: string}
+        main_contact_phone: {type: string}
+        secondary_contact_name: {type: string}
+        secondary_contact_email: {type: string}
+        secondary_contact_phone: {type: string}
