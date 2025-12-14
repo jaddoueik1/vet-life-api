@@ -1,29 +1,27 @@
 deployment:
-  clinic_name: "Happy Paws Veterinary Hospital"
+  clinic_name: "Vitallia Veterinary Hospital"
   timezone: "Asia/Beirut"
   currency: "USD"
   locale: "en"
   brand:
-    logo_url: "https://cdn.example.com/logo.png"
+    logo_url: "https://tse3.mm.bing.net/th/id/OIP.q32AxBFrIrZdMAX0mrdUkgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
     primary_color: "#1A73E8"
     secondary_color: "#F9A826"
 features:
   appointments: true
   patients: true
   visits: true
-  medications: true
-  services: true
-  invoicing: true
-  inventory: true
+  medications: false
+  services: false
+  invoicing: false
+  inventory: false
   chat_bot: false
   whatsapp_reminders: true
 plugins:
   whatsapp_reminder:
     enabled: true
     requires_features: ["appointments"]
-    provider: "meta_cloud_api"
-    messages:
-      appointment_before: "Hi {owner_name}, this is {clinic_name}. Reminder for {patient_name}'s appointment on {scheduled_at}."
+    provider: "twilio"
     reminder_rules:
       - event: "APPOINTMENT_BEFORE"
         offset_hours: 24
@@ -34,20 +32,32 @@ plugins:
       - event: "AFTER_VISIT"
         offset_hours: 6
         template_code: "post_visit_feedback"
+      - event: "APPOINTMENT_CREATED"
+        offset_hours: 0
+        template_code: "appt_created"
+    templates:
+      appt_created:
+        body: "Hello {1}, your appointment is confirmed for {2} at {3}."
+      vaccination_due_initial:
+        body: "Hello {1}, {2} is due for their initial {3} vaccination. Please book an appointment at your earliest convenience."
+      vaccination_due_booster:
+        body: "Hello {1}, {2} is due for their {3} booster vaccination. Please book an appointment to keep them protected."
+      visit_summary:
+        body: "Hello {1}, here is the summary for {2}'s visit: {3}"
   employee_access:
     enabled: true
     requires_features: []
     rules:
       receptionist:
         can_edit_appointments: true
-        can_view_invoices: true
+        can_view_invoices: false
         can_edit_prices: false
       vet:
         can_view_schedule: true
         can_issue_prescriptions: true
       inventory_manager:
-        can_adjust_stock: true
+        can_adjust_stock: false
         can_view_financial_reports: false
   low_stock_alert:
-    enabled: true
+    enabled: false
     requires_features: ["inventory"]

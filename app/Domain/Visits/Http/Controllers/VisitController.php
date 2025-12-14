@@ -42,7 +42,24 @@ class VisitController extends Controller
 
     public function update(Request $request, Visit $visit)
     {
-        $visit->update($request->all());
+        $validated = $request->validate([
+            'summary' => 'nullable|string',
+            'diagnosis' => 'nullable|string',
+            'treatment' => 'nullable|string',
+            'visit_date' => 'sometimes|date',
+            'status' => 'sometimes|string|in:DRAFT,COMPLETE',
+            'visit_reason' => 'nullable|string',
+            'exam_findings' => 'nullable|string',
+            'care_plan' => 'nullable|string',
+        ]);
+
+        $originalStatus = $visit->status;
+        $visit->update($validated);
+
+        if ($originalStatus !== Visit::STATUS_COMPLETE && $visit->status === Visit::STATUS_COMPLETE) {
+            \App\Domain\Visits\Events\VisitCompleted::dispatch($visit);
+        }
+
         return $visit;
     }
 

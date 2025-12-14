@@ -22,13 +22,14 @@ class InventoryController extends Controller
 
     public function store(Request $request)
     {
-        $data = $this->validatePayload($request);
-        $vendorData = $data['vendors'] ?? [];
-
-        $item = $this->service->createItem(Arr::except($data, ['vendors']));
-        $this->syncVendors($item, $vendorData);
-
-        return $item->load('vendors');
+        $data = $request->validate([
+            'name' => 'required',
+            'sku' => 'required',
+            'quantity' => 'required|integer',
+            'price' => 'required|numeric',
+            'reorder_level' => 'nullable|integer'
+        ]);
+        return $this->service->createItem($data);
     }
 
     public function show(InventoryItem $inventoryItem)

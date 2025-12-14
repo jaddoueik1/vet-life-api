@@ -10,7 +10,21 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Patient extends Model
 {
-    protected $fillable = ['owner_id', 'name', 'species', 'breed', 'age', 'sex'];
+    protected $fillable = ['owner_id', 'name', 'species_id', 'breed_id', 'health_plan_enrolled_at', 'age', 'sex'];
+
+    protected $casts = [
+        'health_plan_enrolled_at' => 'date',
+    ];
+
+    public function species(): BelongsTo
+    {
+        return $this->belongsTo(Species::class);
+    }
+
+    public function breed(): BelongsTo
+    {
+        return $this->belongsTo(Breed::class);
+    }
 
     public function owner(): BelongsTo
     {

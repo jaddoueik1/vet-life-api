@@ -65,4 +65,60 @@ class WhatsAppReminderPlugin extends BasePlugin
             Log::info('Sending post visit WhatsApp message', $event->payload);
         });
     }
+
+    protected function handleAppointmentCreated(AppointmentCreated $event): void
+    {
+        // 1. Check if the event is enabled in config
+        $rules = $this->config->get('plugins.whatsapp_reminder.reminder_rules', []);
+        $rule = collect($rules)->firstWhere('event', 'APPOINTMENT_CREATED');
+
+        if (!$rule) {
+            return;
+        }
+
+        // 2. Extract data
+        $payload = $event->payload;
+        $patientId = $payload['patient_id'] ?? null;
+        
+        if (!$patientId) {
+            Log::warning('WhatsAppReminderPlugin: No patient_id found in payload', $payload);
+            return;
+        }
+
+        $patient = \App\Domain\Patients\Models\Patient::with('owner')->find($patientId);
+        
+        if (!$patient || !$patient->owner) {
+            Log::warning('WhatsAppReminderPlugin: Patient or Owner not found', ['patient_id' => $patientId]);
+            return;
+        }
+
+        $phoneNumber = $patient->owner->phone;
+        
+        if (!$phoneNumber) {
+            Log::warning('WhatsAppReminderPlugin: No phone number for owner', ['owner_id' => $patient->owner->id]);
+            return;
+        }
+
+        $scheduledAt = $payload['scheduled_at'] ?? 'now';
+        try {
+            $dateObj = \Carbon\Carbon::parse($scheduledAt);
+            $date = $dateObj->format('M d, Y'); // e.g., Dec 25, 2023
+            $time = $dateObj->format('h:i A');  // e.g., 10:00 AM
+        } catch (\Exception $e) {
+            $date = $scheduledAt;
+            $time = '';
+        }
+
+        $templateCode = $rule['template_code'];
+        // Template: "Hello {1}, your appointment is confirmed for {2} at {3}."
+        $variables = [
+            $patient->owner->name,
+            $date,
+            $time,
+        ];
+
+        // 3. Send message using WhatsAppService
+        $service = app(\App\Core\Services\WhatsAppService::class);
+        $service->sendMessage($phoneNumber, $templateCode, $variables);
+    }
 }

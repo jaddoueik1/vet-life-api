@@ -95,6 +95,8 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('sku')->unique();
+            $table->integer('quantity')->default(0);
+            $table->decimal('price', 10, 2)->default(0);
             $table->integer('reorder_level')->default(0);
             $table->timestamps();
         });

@@ -212,6 +212,94 @@ paths:
       security: [{sanctum: []}]
       summary: Delete vendor
       responses: {'204': {description: no content}}
+  /species:
+    get:
+      security: [{sanctum: []}]
+      summary: List species
+      responses: {'200': {description: Paginated species}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create species
+      responses: {'201': {description: Created}}
+  /species/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show species
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update species
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete species
+      responses: {'204': {description: no content}}
+  /breeds:
+    get:
+      security: [{sanctum: []}]
+      summary: List breeds
+      responses: {'200': {description: Paginated breeds}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create breed
+      responses: {'201': {description: Created}}
+  /breeds/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show breed
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update breed
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete breed
+      responses: {'204': {description: no content}}
+  /vaccinations:
+    get:
+      security: [{sanctum: []}]
+      summary: List vaccinations
+      responses: {'200': {description: Paginated vaccinations}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create vaccination
+      responses: {'201': {description: Created}}
+  /vaccinations/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show vaccination
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update vaccination
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete vaccination
+      responses: {'204': {description: no content}}
+  /health-plans:
+    get:
+      security: [{sanctum: []}]
+      summary: List health plans
+      responses: {'200': {description: Paginated health plans}}
+    post:
+      security: [{sanctum: []}]
+      summary: Create health plan
+      responses: {'201': {description: Created}}
+  /health-plans/{id}:
+    get:
+      security: [{sanctum: []}]
+      summary: Show health plan
+      responses: {'200': {description: ok}}
+    patch:
+      security: [{sanctum: []}]
+      summary: Update health plan
+      responses: {'200': {description: ok}}
+    delete:
+      security: [{sanctum: []}]
+      summary: Delete health plan
+      responses: {'204': {description: no content}}
 components:
   securitySchemes:
     sanctum:
@@ -253,3 +341,50 @@ components:
         secondary_contact_name: {type: string}
         secondary_contact_email: {type: string}
         secondary_contact_phone: {type: string}
+    Species:
+      type: object
+      properties:
+        id: {type: integer}
+        name: {type: string}
+    Breed:
+      type: object
+      properties:
+        id: {type: integer}
+        species_id: {type: integer}
+        health_plan_id: {type: integer}
+        name: {type: string}
+    Vaccination:
+      type: object
+      properties:
+        id: {type: integer}
+        name: {type: string}
+        description: {type: string}
+    HealthPlan:
+      type: object
+      properties:
+        id: {type: integer}
+        species_id: {type: integer}
+        name: {type: string}
+        description: {type: string}
+        vaccinations:
+          type: array
+          items:
+            type: object
+            properties:
+              id: {type: integer}
+              pivot:
+                type: object
+                properties:
+                  frequency_days: {type: integer}
+                  start_age_weeks: {type: integer}
+    Patient:
+      type: object
+      properties:
+        id: {type: integer}
+        owner_id: {type: integer}
+        name: {type: string}
+        species_id: {type: integer}
+        breed_id: {type: integer}
+        health_plan_enrolled_at: {type: string, format: date}
+        age: {type: integer}
+        sex: {type: string}

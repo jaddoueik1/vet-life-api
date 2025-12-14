@@ -13,13 +13,12 @@ class VisitService
     {
         $medications = $data['medication_ids'] ?? [];
         $services = $data['service_ids'] ?? [];
-        $equipmentUsed = $data['equipment_used_ids'] ?? [];
+        $equipmentUsed = $data['equipment_ids'] ?? [];
         unset($data['medication_ids']);
         unset($data['service_ids']);
-        unset($data['equipment_used_ids']);
+        unset($data['equipment_ids']);
 
         $visit = Visit::create($data);
-
         if (! empty($medications)) {
             $pivotData = collect($medications)
                 ->mapWithKeys(fn($medication) => [

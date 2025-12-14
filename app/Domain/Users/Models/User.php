@@ -23,4 +23,10 @@ class User extends Authenticatable
     {
         return $this->roles()->where('slug', $role)->exists();
     }
+
+    public function appointmentTemplates(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(\App\Domain\Appointments\Models\AppointmentTemplate::class, 'appointment_template_user')
+            ->withTimestamps();
+    }
 }

@@ -6,8 +6,10 @@ use App\Domain\Appointments\Models\Appointment;
 use App\Domain\Invoicing\Models\Invoice;
 use App\Domain\Invoicing\Models\InvoiceLineItem;
 use App\Domain\Invoicing\Models\Payment;
+use App\Domain\Patients\Models\Breed;
 use App\Domain\Patients\Models\Owner;
 use App\Domain\Patients\Models\Patient;
+use App\Domain\Patients\Models\Species;
 use App\Domain\Users\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -95,9 +97,17 @@ class ClinicDataSeeder extends Seeder
             );
 
             foreach ($patients as $patientData) {
+                $species = Species::where('name', $patientData['species'])->first();
+                $breed = Breed::where('name', $patientData['breed'])->where('species_id', $species?->id)->first();
+
+                unset($patientData['species'], $patientData['breed']);
+
                 $patient = Patient::updateOrCreate(
                     ['owner_id' => $owner->id, 'name' => $patientData['name']],
-                    $patientData
+                    array_merge($patientData, [
+                        'species_id' => $species?->id,
+                        'breed_id' => $breed?->id,
+                    ])
                 );
 
                 $appointmentDate = Carbon::now()->addDays(rand(1, 7))->setTime(10, 0);

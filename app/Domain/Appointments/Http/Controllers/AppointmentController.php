@@ -25,7 +25,8 @@ class AppointmentController extends Controller
             'scheduled_at' => 'required|date',
             'status' => 'required',
             'notes' => 'nullable',
-            'assigned_vet_id' => 'nullable|integer'
+            'assigned_vet_id' => 'nullable|integer',
+            'appointment_template_id' => 'nullable|integer',
         ]);
 
         return $this->service->create($data);
@@ -42,6 +43,8 @@ class AppointmentController extends Controller
             'scheduled_at' => 'date',
             'status' => 'string',
             'notes' => 'nullable',
+            'assigned_vet_id' => 'nullable|integer',
+            'appointment_template_id' => 'nullable|integer',
         ]);
 
         $appointment->update($data);

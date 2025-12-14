@@ -1,0 +1,194 @@
+openapi: 3.0.3
+info:
+  title: Visit Summary API
+  version: 1.0.0
+  description: >
+    Local, CPU-only API that generates a single-sentence, owner-friendly veterinary visit summary.
+    The service is deterministic: it enforces inclusion of all provided visit details (pet, reason, exam,
+    treatment, plan) and outputs exactly one sentence.
+
+servers:
+  - url: http://localhost:3000
+    description: Direct to summary-api
+  - url: http://localhost:8080
+    description: Via reverse proxy (optional)
+
+tags:
+  - name: Health
+    description: Service health endpoints
+  - name: Summary
+    description: Visit summary generation
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+              examples:
+                ok:
+                  value:
+                    ok: true
+                    model: phi3:mini
+        "500":
+          description: Unexpected server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /summary:
+    post:
+      tags: [Summary]
+      summary: Generate a one-sentence owner visit summary
+      description: |
+        Generates an owner-friendly summary in exactly one sentence. For structured inputs,
+        the service enforces inclusion of all provided fields (pet, reason, exam, treatment, plan).
+      operationId: createSummary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SummaryRequest"
+            examples:
+              structured:
+                summary: Structured visit data (recommended)
+                value:
+                  data:
+                    pet: "Nala (cat)"
+                    reason: "vomiting for 2 days"
+                    exam: "mild dehydration"
+                    treatment: "subcutaneous fluids + antiemetic injection"
+                    plan: "bland diet, monitor closely, recheck in 48h if not improving"
+              freeText:
+                summary: Free-text visit data
+                value:
+                  data: "Pet: Milo (dog)\nReason: itchy ears\nExam: mild otitis externa\nTreatment: ear cleaning + topical drops\nPlan: apply drops daily for 7 days; recheck if not improving"
+      responses:
+        "200":
+          description: Summary generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SummaryResponse"
+              examples:
+                ok:
+                  value:
+                    summary: "Nala (cat) was seen for vomiting for 2 days and found to have mild dehydration, treated with subcutaneous fluids + antiemetic injection, and the plan is bland diet, monitor closely, recheck in 48h if not improving."
+                    model: "phi3:mini"
+        "400":
+          description: Invalid request (e.g., missing data)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                missingData:
+                  value:
+                    error: "Missing body.data (string or object)."
+                invalidJson:
+                  value:
+                    error: "Invalid JSON body."
+        "500":
+          description: Server or model error (deterministic enforcement failure or upstream LLM error)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                enforcementFailure:
+                  value:
+                    error: "Model output missing required fields"
+                upstreamError:
+                  value:
+                    error: "Ollama error: 503 Service Unavailable"
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      additionalProperties: false
+      required: [ok, model]
+      properties:
+        ok:
+          type: boolean
+          example: true
+        model:
+          type: string
+          example: "phi3:mini"
+
+    SummaryRequest:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data:
+          description: |
+            Visit data. Can be provided as free text or as a structured object.
+            Structured objects are recommended to enable deterministic inclusion of all details.
+          oneOf:
+            - type: string
+              minLength: 1
+            - $ref: "#/components/schemas/VisitData"
+
+    VisitData:
+      type: object
+      additionalProperties: true
+      required: [pet, reason, exam, treatment, plan]
+      properties:
+        pet:
+          type: string
+          minLength: 1
+          description: Pet name and optionally species/breed.
+          example: "Nala (cat)"
+        reason:
+          type: string
+          minLength: 1
+          description: Primary complaint / reason for visit.
+          example: "vomiting for 2 days"
+        exam:
+          type: string
+          minLength: 1
+          description: Exam findings / assessment.
+          example: "mild dehydration"
+        treatment:
+          type: string
+          minLength: 1
+          description: Treatment(s) administered.
+          example: "subcutaneous fluids + antiemetic injection"
+        plan:
+          type: string
+          minLength: 1
+          description: Next steps / home care plan.
+          example: "bland diet, monitor closely, recheck in 48h if not improving"
+
+    SummaryResponse:
+      type: object
+      additionalProperties: false
+      required: [summary, model]
+      properties:
+        summary:
+          type: string
+          description: Exactly one sentence intended for the pet owner.
+          example: "Milo (dog) was seen for itchy ears and found to have mild otitis externa, treated with ear cleaning + topical drops, and the plan is apply drops daily for 7 days; recheck if not improving."
+        model:
+          type: string
+          description: Model used to generate the phrasing.
+          example: "phi3:mini"
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: string
+          example: "Missing body.data (string or object)."

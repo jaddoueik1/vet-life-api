@@ -27,9 +27,9 @@ class InventorySeeder extends Seeder
         }
 
         $items = [
-            ['name' => 'Flea & Tick Prevention', 'sku' => 'FT-100', 'reorder_level' => 10],
-            ['name' => 'Heartworm Tablets', 'sku' => 'HW-200', 'reorder_level' => 15],
-            ['name' => 'Gauze Pads', 'sku' => 'GA-300', 'reorder_level' => 30],
+            ['name' => 'Flea & Tick Prevention', 'sku' => 'FT-100', 'reorder_level' => 10, 'quantity' => 25, 'price' => 15.00],
+            ['name' => 'Heartworm Tablets', 'sku' => 'HW-200', 'reorder_level' => 15, 'quantity' => 40, 'price' => 20.00],
+            ['name' => 'Gauze Pads', 'sku' => 'GA-300', 'reorder_level' => 30, 'quantity' => 100, 'price' => 5.00],
         ];
 
         foreach ($items as $itemData) {

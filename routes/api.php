@@ -6,6 +6,10 @@ use App\Domain\Users\Http\Controllers\UserController;
 use App\Domain\Appointments\Http\Controllers\AppointmentController;
 use App\Domain\Patients\Http\Controllers\OwnerController;
 use App\Domain\Patients\Http\Controllers\PatientController;
+use App\Domain\Patients\Http\Controllers\BreedController;
+use App\Domain\Patients\Http\Controllers\HealthPlanController;
+use App\Domain\Patients\Http\Controllers\SpeciesController;
+use App\Domain\Patients\Http\Controllers\VaccinationController;
 use App\Domain\Visits\Http\Controllers\VisitController;
 use App\Domain\Invoicing\Http\Controllers\InvoiceController;
 use App\Domain\Inventory\Http\Controllers\InventoryController;
@@ -30,6 +34,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('feature:patients')->group(function () {
         Route::get('patients/{patient}/details', [PatientController::class, 'details']);
         Route::apiResource('patients', PatientController::class);
+        Route::apiResource('species', SpeciesController::class);
+        Route::apiResource('breeds', BreedController::class);
+        Route::apiResource('vaccinations', VaccinationController::class);
+        Route::apiResource('health-plans', HealthPlanController::class);
     });
     Route::middleware('feature:visits')->apiResource('visits', VisitController::class);
     Route::middleware('feature:invoicing')->group(function () {

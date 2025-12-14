@@ -10,7 +10,7 @@ use App\Domain\Vendors\Models\Vendor;
 
 class InventoryItem extends Model
 {
-    protected $fillable = ['name', 'sku', 'reorder_level'];
+    protected $fillable = ['name', 'sku', 'reorder_level', 'quantity', 'price'];
 
     public function batches(): HasMany
     {
@@ -28,6 +28,12 @@ class InventoryItem extends Model
     {
         return $this->belongsToMany(Vendor::class)
             ->withPivot('is_primary')
+    }
+    
+    public function appointmentTemplates(): BelongsToMany
+    {
+        return $this->belongsToMany(\App\Domain\Appointments\Models\AppointmentTemplate::class, 'appointment_template_inventory_item')
+            ->withPivot('quantity')
             ->withTimestamps();
     }
 }

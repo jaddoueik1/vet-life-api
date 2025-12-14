@@ -17,5 +17,8 @@ class EventServiceProvider extends ServiceProvider
         MedicationUsed::class => [
             DeductMedicationStock::class,
         ],
+        \App\Domain\Visits\Events\VisitCompleted::class => [
+            \App\Domain\Visits\Listeners\GenerateVisitSummary::class,
+        ],
     ];
 }

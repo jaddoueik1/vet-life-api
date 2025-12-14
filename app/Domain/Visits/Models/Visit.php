@@ -3,6 +3,7 @@
 namespace App\Domain\Visits\Models;
 
 use App\Domain\Medications\Models\Medication;
+use App\Domain\Patients\Models\Vaccination;
 use App\Domain\Services\Models\Service;
 use App\Domain\Inventory\Models\InventoryItem;
 use App\Domain\Patients\Models\Patient;
@@ -14,7 +15,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Visit extends Model
 {
-    protected $fillable = ['patient_id', 'vet_id', 'summary', 'diagnosis', 'treatment', 'visit_date'];
+    const STATUS_DRAFT = 'DRAFT';
+    const STATUS_COMPLETE = 'COMPLETE';
+
+    protected $fillable = ['patient_id', 'vet_id', 'summary', 'diagnosis', 'treatment', 'visit_date', 'status', 'visit_reason', 'exam_findings', 'care_plan'];
 
     public function patient(): BelongsTo
     {
@@ -49,6 +53,12 @@ class Visit extends Model
     {
         return $this->belongsToMany(InventoryItem::class, 'inventory_item_visit')
             ->withPivot('quantity')
+            ->withTimestamps();
+    }
+
+    public function vaccinations(): BelongsToMany
+    {
+        return $this->belongsToMany(Vaccination::class, 'vaccination_visit')
             ->withTimestamps();
     }
 }

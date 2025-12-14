@@ -9,7 +9,7 @@ use App\Domain\Users\Models\User;
 
 class Appointment extends Model
 {
-    protected $fillable = ['patient_id', 'scheduled_at', 'status', 'notes', 'assigned_vet_id'];
+    protected $fillable = ['patient_id', 'scheduled_at', 'status', 'notes', 'assigned_vet_id', 'appointment_template_id'];
 
     public function patient(): BelongsTo
     {
@@ -19,5 +19,10 @@ class Appointment extends Model
     public function vet(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_vet_id');
+    }
+
+    public function template(): BelongsTo
+    {
+        return $this->belongsTo(AppointmentTemplate::class, 'appointment_template_id');
     }
 }

@@ -17,16 +17,29 @@ class VeterinarianController extends Controller
     {
         $data = $request->validate([
             'name' => 'required|string',
-            'email' => 'required|email|unique:staff_members,email',
+            'email' => 'required|email|unique:staff_members,email|unique:users,email',
             'phone' => 'nullable|string',
             'specialization' => 'nullable|string',
+            'password' => 'required|string|min:8',
         ]);
 
-        $veterinarian = StaffMember::create(array_merge($data, [
-            'role' => StaffMember::ROLE_VETERINARIAN,
-        ]));
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($data) {
+            $user = \App\Domain\Users\Models\User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => \Illuminate\Support\Facades\Hash::make($data['password']),
+                'phone' => $data['phone'] ?? null,
+            ]);
 
-        return $veterinarian;
+            $role = \App\Domain\Users\Models\Role::where('slug', 'veterinarian')->firstOrFail();
+            $user->roles()->attach($role);
+
+            $veterinarian = StaffMember::create(array_merge($data, [
+                'role' => StaffMember::ROLE_VETERINARIAN,
+            ]));
+
+            return $veterinarian;
+        });
     }
 
     public function show(StaffMember $veterinarian)
@@ -56,7 +69,17 @@ class VeterinarianController extends Controller
     {
         $this->ensureVeterinarian($veterinarian);
 
-        $veterinarian->delete();
+        \Illuminate\Support\Facades\DB::transaction(function () use ($veterinarian) {
+            $user = \App\Domain\Users\Models\User::where('email', $veterinarian->email)->first();
+
+            if ($user && $user->hasRole('veterinarian')) {
+                 // Detach roles to be clean, though user delete might handle cascade
+                 $user->roles()->detach();
+                 $user->delete();
+            }
+
+            $veterinarian->delete();
+        });
 
         return response()->noContent();
     }
